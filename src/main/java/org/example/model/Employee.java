@@ -78,6 +78,7 @@ public class Employee {
                 ", ma_surname='" + ma_surname + '\'' +
                 ", email='" + email + '\'' +
                 ", salary=" + salary +
-                '}';
+                '}' + '\n';
     }
+
 }

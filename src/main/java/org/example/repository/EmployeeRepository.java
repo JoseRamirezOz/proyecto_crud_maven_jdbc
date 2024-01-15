@@ -50,35 +50,32 @@ public class EmployeeRepository implements Repository<Employee>{
         String sql = "INSERT INTO employees(first_name, pa_surname, ma_surname, email, salary)" +
                 "VALUES(?, ?, ?, ?, ?)";
 
-        if(employee.getId() != null && employee.getId() > 0) sql = "INSERT INTO employees(first_name, pa_surname, ma_surname, email, salary)" +
-                "VALUES(?, ?, ?, ?, ?, ?)";
+        if(employee.getId() != null && employee.getId() > 0)
+            sql = "UPDATE " +
+                    "employees SET first_name = ?, pa_surname= ?, ma_surname = ?, email = ?, salary= ?" +
+                    "WHERE ID = ?";
+
 
         try(PreparedStatement myStamp = getConection().prepareStatement(sql)){
+            myStamp.setString(1, employee.getFirst_name());
+            myStamp.setString(2, employee.getPa_surname());
+            myStamp.setString(3, employee.getMa_surname());
+            myStamp.setString(4, employee.getEmail());
+            myStamp.setDouble(5, employee.getSalary());
+            if(employee.getId() != null && employee.getId() > 0)  myStamp.setInt(6, employee.getId());
 
-            if(employee.getId() != null && employee.getId() > 0){
-                myStamp.setInt(1, employee.getId());
-                myStamp.setString(2, employee.getFirst_name());
-                myStamp.setString(3, employee.getPa_surname());
-                myStamp.setString(4, employee.getMa_surname());
-                myStamp.setString(5, employee.getEmail());
-                myStamp.setDouble(6, employee.getSalary());
-
-
-            }else{
-                myStamp.setString(1, employee.getFirst_name());
-                myStamp.setString(2, employee.getPa_surname());
-                myStamp.setString(3, employee.getMa_surname());
-                myStamp.setString(4, employee.getEmail());
-                myStamp.setDouble(5, employee.getSalary());
-            }
-
-
+            myStamp.executeUpdate();
         }
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Integer id) throws SQLException {
+        String sql = "DELETE FROM employees WHERE id = ?";
 
+        try(PreparedStatement myStamp = getConection().prepareStatement(sql)){
+            myStamp.setInt(1,id);
+            myStamp.execute();
+        }
     }
 
 

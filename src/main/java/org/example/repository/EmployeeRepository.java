@@ -46,8 +46,34 @@ public class EmployeeRepository implements Repository<Employee>{
     }
 
     @Override
-    public void save(Employee employee) {
+    public void save(Employee employee) throws SQLException {
+        String sql = "INSERT INTO employees(first_name, pa_surname, ma_surname, email, salary)" +
+                "VALUES(?, ?, ?, ?, ?)";
 
+        if(employee.getId() != null && employee.getId() > 0) sql = "INSERT INTO employees(first_name, pa_surname, ma_surname, email, salary)" +
+                "VALUES(?, ?, ?, ?, ?, ?)";
+
+        try(PreparedStatement myStamp = getConection().prepareStatement(sql)){
+
+            if(employee.getId() != null && employee.getId() > 0){
+                myStamp.setInt(1, employee.getId());
+                myStamp.setString(2, employee.getFirst_name());
+                myStamp.setString(3, employee.getPa_surname());
+                myStamp.setString(4, employee.getMa_surname());
+                myStamp.setString(5, employee.getEmail());
+                myStamp.setDouble(6, employee.getSalary());
+
+
+            }else{
+                myStamp.setString(1, employee.getFirst_name());
+                myStamp.setString(2, employee.getPa_surname());
+                myStamp.setString(3, employee.getMa_surname());
+                myStamp.setString(4, employee.getEmail());
+                myStamp.setDouble(5, employee.getSalary());
+            }
+
+
+        }
     }
 
     @Override
